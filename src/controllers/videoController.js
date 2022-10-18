@@ -1,23 +1,10 @@
-import video from "../models/video";
+import dideo from "../models/video";
 // video.find({}, (error, videos) => {]
 
 export const homepageVideos = async (req, res) => {
     // synchronous 상황을 해야 await 가능 cuz await은 문법상 funtion에서만 활용가능
-    try {
-        console.log("im zero");
-        // video 찾기
-        console.log("im first");
-        const videos = await video.find({});
-        // database 기다려주기
-        console.log("im second");
-        // render!
-        return res.render("home", { pageTitle: "Home", videos: [] });
-
-    }
-    catch {
-        console.log("something happend..!");
-    }
-    console.log("im last");
+    const videos = await dideo.find({});
+    return res.render("home", { pageTitle: "Home", videos });
 }
 
 export const watch = (req, res) => {
@@ -40,8 +27,18 @@ export const getUpload = (req, res) => {
     return res.render("upload", { pageTitle: "Upload Video" })
 }
 
-export const postUpload = (req, res) => {
-    const { title } = req.body;
-    videos.push(newVideo);
+export const postUpload = async (req, res) => {
+    const { title, hashtags, description } = req.body;
+    await dideo.create({
+        title,
+        description,
+        createdAt: Date.now(),
+        hashtags: hashtags.split(",").map(word => `#${word}`),
+        meta: {
+            views: 0,
+            rating: 0,
+        }
+    });
+
     return res.redirect("/");
 };
