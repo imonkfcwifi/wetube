@@ -4,12 +4,13 @@ import dideo from "../models/video";
 export const homepageVideos = async (req, res) => {
     // synchronous 상황을 해야 await 가능 cuz await은 문법상 funtion에서만 활용가능
     const videos = await dideo.find({});
-    return res.render("home", { pageTitle: "Home", videos });
+    return res.render("home", { pageTitle: `"SWEET HOME"`, videos });
 }
 
-export const watch = (req, res) => {
+export const watch = async (req, res) => {
     const { id } = req.params;
-    return res.render("watch", { pageTitle: `Watch` });
+    const video = await dideo.findById(id);
+    return res.render("watch", { pageTitle: video.title, video });
 }
 export const getEdit = (req, res) => {
     const { id } = req.params;
